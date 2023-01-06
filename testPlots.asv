@@ -1,5 +1,0 @@
-
-
-figure(1)
-plot3(out_gsbx_ga.pop.Position(:,1),out_gsbx_ga.pop.Position(:,2), out_gsbx_ga.pop.Position(:,2))
-title("Joints 1,2,3")

@@ -23,6 +23,14 @@ function obj = IK_cost_b(Q, D_desired, U, d, ot)
             w1 = r;
             w2 = 1-r;
             obj = w1*obj_p + w2*obj_o;
+        elseif ot == "poserpyrr"
+            obj_p = sqrt(sum((D_desired(1:3)-D_current(1:3)).^2));  
+            l = 
+            obj_o = sum(abs(D_desired(4:6)-D_current(4:6)))/3;    
+            r = rand();
+            w1 = r;
+            w2 = 1-r;
+            obj = w1*obj_p + w2*obj_o;
         elseif ot == "poserpys"  
             obj_p = sqrt(sum((D_desired(1:3)-D_current(1:3)).^2));             
             obj_o = sum(abs(D_desired(4:6)-D_current(4:6)))/3;                         
