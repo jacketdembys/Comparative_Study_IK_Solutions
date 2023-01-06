@@ -1,8 +1,8 @@
 %% set paths and running modes
 clc, clear, close all
-addpath("scripts/gradient_descent/")
-addpath("scripts/coop_coev_genetic_algorithm/")
-addpath("scripts/particle_swarm_optimization/")
+addpath('scripts/gradient_descent/')
+addpath('scripts/coop_coev_genetic_algorithm/')
+addpath('scripts/particle_swarm_optimization/')
 rng default                                 % For reproducibility
 plot_mode = "No";                               % For plots: Yes, No
 run_mode = "debug";                             % debug, run
@@ -11,7 +11,7 @@ save_mode = "No";                             % Yes, No
 %% load robot data
 data = table2array(readtable("cec_data_points_RRRRRR.csv"));
 str_unit_chosen = "m";
-my_objective = "poserpyr"; %poserpys, poserpyr, posehtm, position, posequaternion
+my_objective = "poserpys"; %poserpys, poserpyr, posehtm, position, posequaternion
 
 %% choose the unit to investigate
 if(str_unit_chosen == "m")                     % choose the m
@@ -33,8 +33,9 @@ end
 % set the run mode
 if run_mode == "debug"
     samples = 1;
-    crossoverType = ["gsbx"];
-    pops = [100];
+    crossoverType = ["singlepoint", "doublepoint", "uniform", "sbx", "gsbx"];
+    %crossoverType = ["gsbx"];
+    pops = [300];
 else
     samples = length(data);
     crossoverType = ["singlepoint", "doublepoint", "uniform", "sbx", "gsbx"];
@@ -48,10 +49,10 @@ for p=1:length(pops)
 
     
     npop = pops(p);                                         % Population size 300 used for position objective
-    max_steps = 500;                                    % maximum number of iterations for all the algorithms
+    max_steps = 1000;                                    % maximum number of iterations for all the algorithms
     n = 6;                                              % number of variables or dimensions
-    rate_mut = 0.8;     %0.8                              % rate of mutation for genetic algorithms
-    rate_cross = 0.4;   %1                                  % rate of cross-over for genetic algorithms: 1
+    rate_mut = 0.2;     %0.8                              % rate of mutation for genetic algorithms
+    rate_cross = 0.9;   %1                                  % rate of cross-over for genetic algorithms: 1
     lb = deg2rad([-360,  50,  19, -360, -360, -360]);                                % Lower bound of the decision variables 
     ub = deg2rad([ 360, 310, 341,  360,  360,  360]);                        % Upper bound of the decision variables    
     epsilon = unifrnd(-0.001,0.001,n,1);                % incremental steps for numerical gradient approximation 
@@ -113,7 +114,7 @@ for p=1:length(pops)
             problem.CrossFunctionType = crossoverType(c);      % singlepoint, doublepoint, uniform, combined_sdu, sbx, gsbx
             fprintf("\nMinimizing the function with %s Crossover Genetic Algorithm with npop = %d\n", crossoverType(c), npop)
             tsart_gsbx_ga = tic;
-            out_gsbx_ga = IK_minimized_with_traditional_genetic_algorithm_2(problem, params);
+            out_gsbx_ga = IK_minimized_with_traditional_genetic_algorithm_3(problem, params);
             tend_gsbx_ga = toc(tsart_gsbx_ga); 
             recap_gsbx_ga = out_gsbx_ga.BestCosts;
             fval_gsbx_ga = out_gsbx_ga.BestSolution.Cost;
